@@ -19,7 +19,7 @@
       "args": [
         "run",
         "deploy",
-        "char_cards",
+        "char-cards",
         "--image",
         "gcr.io/$PROJECT_ID/char_cards_image:$COMMIT_SHA",
         "--region",
