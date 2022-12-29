@@ -11,6 +11,9 @@ const CardWrapper = styled.div`
   background: black;
   position: relative;
   font-size: 12px;
+
+  &:hover {
+  }
 `;
 
 const Delete = styled.div`
@@ -42,23 +45,23 @@ const Notes = styled.textarea`
   margin-top: 8px;
 `;
 
+const Link = styled.a`
+  color: white;
+`;
+
 export function Card({ hero, removeName }) {
   return (
     <CardWrapper>
       <Delete onClick={() => removeName(hero.name)}>+</Delete>
       <Title>
-        <span>{hero.name.slice(0, 12)}</span>
+        <span>
+          <Link target="_blank" href={`https://europe-west1-fremi-rpg.cloudfunctions.net/dnd-pc-repo?char=${hero.name}`}>
+            {hero.name.slice(0, 12)}
+          </Link>
+        </span>
         <span>🛡️ {hero.armor_class}</span>
         <span>👀 {hero.passive_wisdom}</span>
       </Title>
-      <Stats>
-        <div>{hero.ability_strength}</div>
-        <div>{hero.ability_dexterity}</div>
-        <div>{hero.ability_constitution}</div>
-        <div>{hero.ability_intelligence}</div>
-        <div>{hero.ability_wisdom}</div>
-        <div>{hero.ability_charisma}</div>
-      </Stats>
       <Stats>
         <div>STR</div>
         <div>DEX</div>
@@ -66,6 +69,14 @@ export function Card({ hero, removeName }) {
         <div>INT</div>
         <div>WIS</div>
         <div>CHA</div>
+      </Stats>
+      <Stats>
+        <div>{hero.ability_strength}</div>
+        <div>{hero.ability_dexterity}</div>
+        <div>{hero.ability_constitution}</div>
+        <div>{hero.ability_intelligence}</div>
+        <div>{hero.ability_wisdom}</div>
+        <div>{hero.ability_charisma}</div>
       </Stats>
       <Notes />
     </CardWrapper>

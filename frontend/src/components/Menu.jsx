@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef, useRef } from "react";
 import styled from "styled-components";
 
 const MenuWrapper = styled.div`
@@ -11,6 +11,7 @@ const MenuWrapper = styled.div`
   background: black;
   flex-direction: column;
   z-index: 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 `;
 
 const SearchBox = styled.div`
@@ -39,27 +40,50 @@ const AddOrRemove = styled.div`
   color: ${(p) => (p.isAdd ? "white" : "red")};
 `;
 
-export function Menu({ names, selectedNames, addName, removeName, visible }) {
+export function Menu({ names, selectedNames, addName, toggleName, toggleNames, visible }) {
   const [filter, setFilter] = React.useState("");
+  const filterRef = useRef();
+  filterRef.current = names.filter((x) => filter.length == 0 || x.toLowerCase().includes(filter));
+  const filteredNames = filterRef.current;
+
+  const inputRef = createRef();
+
+  function addSearchedNames(e) {
+    if (e.key == "Enter") {
+      toggleNames(filterRef.current);
+      setFilter("");
+    }
+  }
+
+  React.useEffect(() => {
+    if (visible) {
+      document.addEventListener("keydown", addSearchedNames);
+      inputRef.current.focus();
+    } else {
+      document.removeEventListener("keydown", addSearchedNames);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", addSearchedNames);
+    };
+  }, [visible, selectedNames]);
 
   return (
     <MenuWrapper visible={visible}>
       <SearchBox>
-        <Search type="text" focused onChange={(e) => setFilter(e.currentTarget.value)} />
+        <Search ref={inputRef} value={filter} type="text" onChange={(e) => setFilter(e.currentTarget.value)} />
       </SearchBox>
 
-      {names
-        .filter((x) => filter.length == 0 || x.toLowerCase().includes(filter))
-        .map((x) => {
-          const isAdd = !selectedNames.includes(x);
+      {filteredNames.map((x) => {
+        const isAdd = !selectedNames.includes(x);
 
-          return (
-            <NameItem key={x} onClick={() => (isAdd ? addName : removeName)(x)}>
-              <Name>{x}</Name>
-              <AddOrRemove isAdd={isAdd}>+</AddOrRemove>
-            </NameItem>
-          );
-        })}
+        return (
+          <NameItem key={x} onClick={() => toggleName(x)}>
+            <Name>{x}</Name>
+            <AddOrRemove isAdd={isAdd}>+</AddOrRemove>
+          </NameItem>
+        );
+      })}
     </MenuWrapper>
   );
 }
