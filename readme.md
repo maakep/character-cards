@@ -1,7 +1,4 @@
 ## Running it locally
 
-cwd this file
-
-set \_FUNCTION_BASE_URL env variable
-
-> docker stop profile && docker rm profile && docker build -t profileimg . && docker run -d -it -p 8080:8080 --name=profile profileimg
+Make sure there is a servicekey.json which contains the serviceaccount json from gcp
+Go to /backend and run `npm run debug`

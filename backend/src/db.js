@@ -1,6 +1,6 @@
-const { Firestore } = require("@google-cloud/firestore");
+const { Firestore } = require('@google-cloud/firestore');
 const firestore = new Firestore();
-const collection = firestore.collection("CHARACTERS");
+const collection = firestore.collection('CHARACTERS');
 
 function extractData(snapshot) {
   const dataArray = [];
@@ -11,8 +11,8 @@ function extractData(snapshot) {
   return dataArray;
 }
 
-async function loadAllPc(req) {
-  const snapshot = await collection.get();
+async function loadAllPublicPCs(req) {
+  const snapshot = await collection.where('_IS_PUBLIC', '==', true).get();
   const data = extractData(snapshot);
 
   if (data == undefined) {
@@ -25,5 +25,5 @@ async function loadAllPc(req) {
 module.exports = {
   collection,
   extractData,
-  loadAllPc,
+  loadAllPublicPCs,
 };

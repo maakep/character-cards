@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "debug": "set GOOGLE_APPLICATION_CREDENTIALS=../servicekey.json&& npm start"
   },
   "author": "",
   "license": "ISC",
