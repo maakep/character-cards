@@ -1,9 +1,8 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const CardWrapper = styled.div`
   width: 250px;
-  height: 150px;
   display: flex;
   flex-direction: column;
   margin: 32px;
@@ -12,7 +11,8 @@ const CardWrapper = styled.div`
   position: relative;
   font-size: 12px;
 
-  &:hover {
+  &:hover .hidden {
+    display: block;
   }
 `;
 
@@ -22,63 +22,128 @@ const Delete = styled.div`
   top: 3px;
   position: absolute;
   cursor: pointer;
+  display: none;
 `;
 
-const Title = styled.div`
-  font-size: 16px;
-  margin-bottom: 32px;
+const Row = styled.div`
+  margin: 16px 0;
   display: flex;
   justify-content: space-between;
 `;
-const Stats = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-`;
 
-const Notes = styled.textarea`
-  resize: none;
-  background: black;
-  color: white;
-  border: none;
-  height: 100%;
-  margin-top: 8px;
-`;
+// const Notes = styled.textarea`
+//   resize: none;
+//   background: black;
+//   color: white;
+//   border: none;
+//   height: 100%;
+//   margin-top: 8px;
+// `;
 
 const Link = styled.a`
   color: white;
+  text-decoration: none;
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: ${(p) => p.size || 12}px;
+`;
+
+const HeroName = styled.div`
+  position: absolute;
+  top: -14px;
+  background: black;
+  font-size: 16px;
+  padding: 4px;
+`;
+const Title = styled.div`
+  color: #b9b8ff;
+  font-size: ${(p) => p.size || 16}px;
 `;
 
 export function Card({ hero, removeName }) {
+  const profs = Object.keys(hero)
+    .filter((x) => ((x.includes('proficiency_skill') && !hero[x.replace('proficiency', 'expertise')] == true) || x.includes('expertise_skill')) && hero[x] == true)
+    .map((x) => x.replace('proficiency', '').replace('expertise', '*').replace('_skill_', ' ').replaceAll('_', ' '));
+
   return (
     <CardWrapper>
-      <Delete onClick={() => removeName(hero.name)}>+</Delete>
-      <Title>
-        <span>
-          <Link target="_blank" href={`https://europe-west1-fremi-rpg.cloudfunctions.net/dnd-pc-repo?char=${hero.name}`}>
-            {hero.name.slice(0, 12)}
-          </Link>
-        </span>
-        <span>🛡️ {hero.armor_class}</span>
-        <span>👀 {hero.passive_wisdom}</span>
-      </Title>
-      <Stats>
-        <div>STR</div>
-        <div>DEX</div>
-        <div>CON</div>
-        <div>INT</div>
-        <div>WIS</div>
-        <div>CHA</div>
-      </Stats>
-      <Stats>
-        <div>{hero.ability_strength}</div>
-        <div>{hero.ability_dexterity}</div>
-        <div>{hero.ability_constitution}</div>
-        <div>{hero.ability_intelligence}</div>
-        <div>{hero.ability_wisdom}</div>
-        <div>{hero.ability_charisma}</div>
-      </Stats>
-      <Notes />
+      <Delete title='Remove from view' className='hidden' onClick={() => removeName(hero.name)}>
+        +
+      </Delete>
+      <HeroName>
+        <Link target='_blank' href={`https://europe-west1-fremi-rpg.cloudfunctions.net/dnd-pc-repo?char=${hero.name}`}>
+          <Title>
+            {hero.name.slice(0, 12)}, {hero.hit_point_maximum || '?'} hp
+          </Title>
+        </Link>
+      </HeroName>
+      <Row>
+        <Column title='Armor Class' size={14}>
+          <span>🛡️</span>
+          <span>{hero.armor_class}</span>
+        </Column>
+        <Column title='Spell Save DC' size={14}>
+          <span>🧙</span>
+          <span>{hero.spell_save_dc}</span>
+        </Column>
+        <Column>{/* Some hacky spacing */}</Column>
+        <Column title='Passive Perception' size={14}>
+          <span>👀</span>
+          <span> {hero.passive_wisdom}</span>
+        </Column>
+        <Column title='Passive Insight' size={14}>
+          <span>🧠</span>
+          <span> {hero.passive_insight}</span>
+        </Column>
+        <Column title='Passive Investigation' size={14}>
+          <span>🔎</span>
+          <span> {hero.passive_investigation}</span>
+        </Column>
+      </Row>
+      <Row>
+        <Column>
+          <div>STR</div>
+          <div>{hero.ability_strength}</div>
+        </Column>
+        <Column>
+          <div>DEX</div>
+          <div>{hero.ability_dexterity}</div>
+        </Column>
+        <Column>
+          <div>CON</div>
+          <div>{hero.ability_constitution}</div>
+        </Column>
+        <Column>
+          <div>INT</div>
+          <div>{hero.ability_intelligence}</div>
+        </Column>
+        <Column>
+          <div>WIS</div>
+          <div>{hero.ability_wisdom}</div>
+        </Column>
+        <Column>
+          <div>CHA</div>
+          <div>{hero.ability_charisma}</div>
+        </Column>
+      </Row>
+      <Row>
+        <div>
+          <Title className='hidden'>Proficiencies</Title>
+          {profs.map((x) => (
+            <div key={x}>- {x}</div>
+          ))}
+        </div>
+      </Row>
+      <Row>
+        <div>
+          <Title className='hidden'>Other profs & languages</Title>
+          <div>{hero.proficiencies_languages}</div>
+        </div>
+      </Row>
     </CardWrapper>
   );
 }
