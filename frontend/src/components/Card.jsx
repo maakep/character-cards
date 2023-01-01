@@ -8,8 +8,10 @@ const CardWrapper = styled.div`
   margin: 32px;
   padding: 16px;
   background: black;
+  color: #b9b9b9;
   position: relative;
   font-size: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 
   &:hover .hidden {
     display: block;
@@ -93,42 +95,24 @@ export function Card({ hero, removeName }) {
         <Column>{/* Some hacky spacing */}</Column>
         <Column title='Passive Perception' size={14}>
           <span>👀</span>
-          <span> {hero.passive_wisdom}</span>
+          <span>{hero.passive_wisdom}</span>
         </Column>
         <Column title='Passive Insight' size={14}>
           <span>🧠</span>
-          <span> {hero.passive_insight}</span>
+          <span>{hero.passive_insight}</span>
         </Column>
         <Column title='Passive Investigation' size={14}>
           <span>🔎</span>
-          <span> {hero.passive_investigation}</span>
+          <span>{hero.passive_investigation}</span>
         </Column>
       </Row>
       <Row>
-        <Column>
-          <div>STR</div>
-          <div>{hero.ability_strength}</div>
-        </Column>
-        <Column>
-          <div>DEX</div>
-          <div>{hero.ability_dexterity}</div>
-        </Column>
-        <Column>
-          <div>CON</div>
-          <div>{hero.ability_constitution}</div>
-        </Column>
-        <Column>
-          <div>INT</div>
-          <div>{hero.ability_intelligence}</div>
-        </Column>
-        <Column>
-          <div>WIS</div>
-          <div>{hero.ability_wisdom}</div>
-        </Column>
-        <Column>
-          <div>CHA</div>
-          <div>{hero.ability_charisma}</div>
-        </Column>
+        {['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'].map((x) => (
+          <Column>
+            <Title size={12}>{x.slice(0, 3).toUpperCase()}</Title>
+            <div>{hero[`ability_${x}`]}</div>
+          </Column>
+        ))}
       </Row>
       <Row>
         <div>

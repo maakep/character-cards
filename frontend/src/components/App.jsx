@@ -1,7 +1,7 @@
-import * as React from "react";
-import { Header } from "./Header";
-import { Menu } from "./Menu";
-import { Body } from "./Body";
+import * as React from 'react';
+import { Header } from './Header';
+import { Menu } from './Menu';
+import { Body } from './Body';
 
 export function App() {
   const data = window.serverData.pcs;
@@ -9,16 +9,16 @@ export function App() {
   const [menuVisible, setMenuVisible] = React.useState(true);
 
   function handleKey(e) {
-    if ((e.ctrlKey && e.key.toLowerCase() == "f") || e.key == "Escape") {
+    if (e.key == 'Tab' || e.key == 'Escape') {
       e.preventDefault();
       setMenuVisible(!menuVisible);
     }
   }
 
   React.useEffect(() => {
-    document.addEventListener("keydown", handleKey);
+    document.addEventListener('keydown', handleKey);
     return () => {
-      document.removeEventListener("keydown", handleKey);
+      document.removeEventListener('keydown', handleKey);
     };
   }, [menuVisible]);
 
