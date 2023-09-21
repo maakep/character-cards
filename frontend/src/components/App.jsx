@@ -23,7 +23,6 @@ export function App() {
   }, [menuVisible]);
 
   const selection = selectedNames.map((x) => data.find((y) => y.name == x));
-  const names = data.map((x) => x.name);
 
   function toggleNames(names) {
     const newSelection = [...selectedNames];
@@ -62,7 +61,7 @@ export function App() {
   return (
     <>
       <Header setMenuVisible={toggleMenu} />
-      <Menu names={names} selectedNames={selectedNames} toggleNames={toggleNames} toggleName={toggleName} visible={menuVisible} />
+      <Menu data={data} selectedNames={selectedNames} toggleNames={toggleNames} toggleName={toggleName} visible={menuVisible} />
       <Body closeMenu={() => setMenuVisible(false)} selection={selection} removeName={removeName} />
     </>
   );

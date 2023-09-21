@@ -12,6 +12,11 @@ const MenuWrapper = styled.div`
   flex-direction: column;
   z-index: 1;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const SearchBox = styled.div`
@@ -40,10 +45,11 @@ const AddOrRemove = styled.div`
   color: ${(p) => (p.isAdd ? 'white' : 'red')};
 `;
 
-export function Menu({ names, selectedNames, addName, toggleName, toggleNames, visible }) {
+export function Menu({ data, selectedNames, addName, toggleName, toggleNames, visible }) {
   const [filter, setFilter] = React.useState('');
   const filterRef = useRef();
-  filterRef.current = names.filter((x) => filter.length == 0 || x.toLowerCase().includes(filter));
+
+  filterRef.current = data.filter((x) => filter.length == 0 || x.name.toLowerCase().includes(filter) || (filter.length > 3 && x.player_name.includes(filter)));
   const filteredNames = filterRef.current;
 
   const inputRef = createRef();
@@ -75,11 +81,11 @@ export function Menu({ names, selectedNames, addName, toggleName, toggleNames, v
       </SearchBox>
 
       {filteredNames.map((x) => {
-        const isAdd = !selectedNames.includes(x);
+        const isAdd = !selectedNames.includes(x.name);
 
         return (
-          <NameItem key={x} onClick={() => toggleName(x)}>
-            <Name>{x}</Name>
+          <NameItem key={x.name} onClick={() => toggleName(x.name)}>
+            <Name>{x.name}</Name>
             <AddOrRemove isAdd={isAdd}>+</AddOrRemove>
           </NameItem>
         );
